@@ -9,6 +9,8 @@ import uz.pdp.agrarmarket.model.address.ProvinceRegisterDto;
 import uz.pdp.agrarmarket.repository.Address.ProvinceRepository;
 import uz.pdp.agrarmarket.service.BaseService;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ProvinceService implements BaseService<ProvinceRegisterDto> {
@@ -16,8 +18,10 @@ public class ProvinceService implements BaseService<ProvinceRegisterDto> {
 
     @Override
     public ResponseEntity<?> add(ProvinceRegisterDto provinceRegisterDto) {
-        provinceRepository.findByName(provinceRegisterDto.getName())
-                .orElseThrow(()->new RecordAlreadyExistException("Province already exist"));
+        Optional<Province> byName = provinceRepository.findByName(provinceRegisterDto.getName());
+        if (byName.isPresent()){
+            throw new RecordAlreadyExistException("Province already exist");
+        }
         Province save = provinceRepository.save(
                 Province.builder()
                         .name(provinceRegisterDto.getName())
