@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 class AminControllerUpToDistrictTest extends BaseTestConfiguration {
 
+    private static final String BASE_URL="/api/v1";
     @AfterEach
     void tearDown() {
         districtRepository.deleteAll();
@@ -85,16 +86,16 @@ class AminControllerUpToDistrictTest extends BaseTestConfiguration {
         update(100).andExpect(status().isNotFound());
     }
 
-    private ResultActions addProvince() throws Exception {
+    private void addProvince() throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                post("/api/v1/addProvince")
+                post(BASE_URL+"/addProvince")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(new ProvinceRegisterDto("Tashkent")));
-        return mockMvc.perform(requestBuilder);
+        mockMvc.perform(requestBuilder);
     }
     private ResultActions addDistrictForCheck() throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                post("/api/v1/addDistrict")
+                post(BASE_URL+"/addDistrict")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(new DistrictRegisterDto("Tashkent t",1)));
         return mockMvc.perform(requestBuilder);
@@ -102,23 +103,23 @@ class AminControllerUpToDistrictTest extends BaseTestConfiguration {
 
     private ResultActions getList() throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                get("/api/v1/getDistrictList");
+                get(BASE_URL+"/getDistrictList");
         return mockMvc.perform(requestBuilder);
     }
 
     private ResultActions callDelete(int id) throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                delete("/api/v1/deleteDistrict/" + id);
+                delete(BASE_URL+"/deleteDistrict/" + id);
         return mockMvc.perform(requestBuilder);
     }
     private ResultActions getById(int id) throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                get("/api/v1/getDistrict/" + id);
+                get(BASE_URL+"/getDistrict/" + id);
         return mockMvc.perform(requestBuilder);
     }
     private ResultActions update(int id) throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                put("/api/v1/updateDistrict/"+id)
+                put(BASE_URL+"/updateDistrict/"+id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(new DistrictRegisterDto("Qarshi Tuman",1)));
         return mockMvc.perform(requestBuilder);

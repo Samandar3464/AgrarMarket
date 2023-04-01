@@ -1,7 +1,6 @@
 package uz.pdp.agrarmarket.AdminController;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -10,129 +9,102 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import uz.pdp.agrarmarket.BaseTestConfiguration;
-import uz.pdp.agrarmarket.model.address.ProvinceRegisterDto;
+import uz.pdp.agrarmarket.model.request.PostCategoryRegisterDto;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @SpringBootTest
-class AdminControllerUpToProvinceTest extends BaseTestConfiguration {
-
-    private static final String BASE_URL="/api/v1";
+class AdminControllerUpToPostCategoryTest extends BaseTestConfiguration {
+    private static final String BASE_URL="/api/v1/admin/category";
     @AfterEach
     void tearDown() {
-        provinceRepository.deleteAll();
+        postCategoryRepository.deleteAll();
     }
 
     @Test
     @WithMockUser(roles = "SUPER_ADMIN")
-    @DisplayName("Can add Province ")
-    void addProvince() throws Exception {
+    void addCategory() throws Exception {
         add().andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(roles = "SUPER_ADMIN")
-    @DisplayName("Check add Province throw exception if province exist ")
-    void addProvinceThrow() throws Exception {
+    void addCategoryThrowException() throws Exception {
         add();
         add().andExpect(status().isAlreadyReported());
     }
+
     @Test
     @WithMockUser(roles = "SUPER_ADMIN")
-    void getProvinceList() throws Exception {
+    void getCategoryList() throws Exception {
         add();
         getList().andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(roles = "SUPER_ADMIN")
-    void deleteProvince() throws Exception {
+    void getCategoryById() throws Exception {
         add();
-        callDelete(5).andExpect(status().isOk());
+        getById(5).andExpect(status().isOk());
     }
+
     @Test
     @WithMockUser(roles = "SUPER_ADMIN")
-    void updateProvince() throws Exception {
-        add();
-        update(4).andExpect(status().isOk());
+    void getCategoryByIdThrowException() throws Exception {
+        getById(5).andExpect(status().isNotFound());
     }
+
     @Test
     @WithMockUser(roles = "SUPER_ADMIN")
-    void deleteProvinceThrow() throws Exception {
+    void deleteCategoryById() throws Exception {
+        add();
+        callDelete(2).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(roles = "SUPER_ADMIN")
+    void deleteCategoryByIdThrow() throws Exception {
         callDelete(999).andExpect(status().isNotFound());
     }
 
-
     @Test
     @WithMockUser(roles = "SUPER_ADMIN")
-    void getProvinceById() throws Exception {
+    void updateCategory() throws Exception {
         add();
-        getById(6).andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUser(roles = "SUPER_ADMIN")
-    void getProvinceByIdThrow() throws Exception {
-        getById(999).andExpect(status().isNotFound());
-    }
-
-
-
-    @Test
-    @WithMockUser(roles = "SUPER_ADMIN")
-    @DisplayName("Throw exception if province not fount")
-    void updateProvinceThrow() throws Exception {
-        update(100).andExpect(status().isNotFound());
-    }
-
-    @Test
-    @WithMockUser(roles = "SUPER_ADMIN")
-    @DisplayName("Throw exception if province already exist")
-    void updateProvinceThrowException() throws Exception {
-        add();
-        updateThrow(3).andExpect(status().isAlreadyReported());
+        update(4).andExpect(status().isOk());
     }
 
     private ResultActions add() throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                post(BASE_URL+"/addProvince")
+                post(BASE_URL+"/addCategory")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(new ProvinceRegisterDto("Tashkent")));
+                        .content(new ObjectMapper().writeValueAsString(new PostCategoryRegisterDto("Animal")));
         return mockMvc.perform(requestBuilder);
     }
 
     private ResultActions getList() throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                get(BASE_URL+"/getProvinceList");
+                get(BASE_URL+"/getCategoryList");
         return mockMvc.perform(requestBuilder);
     }
 
     private ResultActions callDelete(int id) throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                delete(BASE_URL+"/deleteProvince/" + id);
+                delete(BASE_URL+"/deleteById/" + id);
         return mockMvc.perform(requestBuilder);
     }
 
     private ResultActions getById(int id) throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                get(BASE_URL+"/getProvince/" + id);
+                get(BASE_URL+"/getCategoryById/" + id);
         return mockMvc.perform(requestBuilder);
     }
 
     private ResultActions update(int id) throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                put(BASE_URL+"/updateProvince/" + id)
+                put(BASE_URL+"/updateCategory/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(new ProvinceRegisterDto("Olmaliq")));
-        return mockMvc.perform(requestBuilder);
-    }
-
-    private ResultActions updateThrow(int id) throws Exception {
-        final MockHttpServletRequestBuilder requestBuilder =
-                put(BASE_URL+"/updateProvince/" + id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(new ProvinceRegisterDto("Tashkent")));
+                        .content(new ObjectMapper().writeValueAsString(new PostCategoryRegisterDto("Plants")));
         return mockMvc.perform(requestBuilder);
     }
 }

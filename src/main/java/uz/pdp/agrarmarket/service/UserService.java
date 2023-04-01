@@ -46,6 +46,10 @@ public class UserService {
 
 
     public ResponseEntity<?> addUserFromAdmin(AddUserFromAdminDto addUserFromAdminDto) {
+        Optional<User> byPhoneNumber = userRepository.findByPhoneNumber(addUserFromAdminDto.getPhoneNumber());
+        if (byPhoneNumber.isPresent()){
+            throw new UserAlreadyExist("This phone number already exist");
+        }
         User user = User.of(addUserFromAdminDto);
         user.setPassword(passwordEncoder.encode(addUserFromAdminDto.getPassword()));
         return ResponseEntity.ok(userRepository.save(user));

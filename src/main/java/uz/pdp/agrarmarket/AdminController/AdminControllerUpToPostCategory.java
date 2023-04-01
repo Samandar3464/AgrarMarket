@@ -11,7 +11,7 @@ import uz.pdp.agrarmarket.service.PostCategoryService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin/category")
-public class AdminControllerUpToWorkCategory {
+public class AdminControllerUpToPostCategory {
     private final PostCategoryService postCategoryService;
 
     @PostMapping("/addCategory")

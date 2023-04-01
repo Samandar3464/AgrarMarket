@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import uz.pdp.agrarmarket.entity.AttachmentEntity;
+import uz.pdp.agrarmarket.entity.ENUM.Gender;
 import uz.pdp.agrarmarket.entity.User;
 import uz.pdp.agrarmarket.entity.address.City;
 import uz.pdp.agrarmarket.entity.address.District;
@@ -19,7 +20,7 @@ public class UserResponseDto {
     private String name;
     private String surname;
     private String phoneNumber;
-    private String gender;
+    private Gender gender;
     private Province province;
     private City city;
     private District district;
@@ -36,7 +37,7 @@ public class UserResponseDto {
                 .name(user.getName())
                 .surname(user.getSurname())
                 .phoneNumber(user.getPhoneNumber())
-                .gender(user.getGender().toString())
+                .gender(user.getGender())
                 .province(user.getProvince())
                 .city(user.getCity())
                 .district(user.getDistrict())

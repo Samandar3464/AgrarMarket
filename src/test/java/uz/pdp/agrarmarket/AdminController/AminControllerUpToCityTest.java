@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 class AminControllerUpToCityTest extends BaseTestConfiguration {
 
+    private static final String BASE_URL="/api/v1";
     @AfterEach
     void tearDown() {
         cityRepository.deleteAll();
@@ -84,25 +85,16 @@ class AminControllerUpToCityTest extends BaseTestConfiguration {
     void updateCityThrow() throws Exception {
         update(100).andExpect(status().isNotFound());
     }
-//    @Test
-//    @WithMockUser(roles = "SUPER_ADMIN")
-//    @DisplayName("Throw exception if city already exist")
-//    void updateCityThrowException() throws Exception {
-//        addProvince();
-//        addCityDistrict();
-//        updateThrow(3).andExpect(status().isAlreadyReported());
-//    }
-
-    private ResultActions addProvince() throws Exception {
+    private void addProvince() throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                post("/api/v1/addProvince")
+                post(BASE_URL+"/addProvince")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(new ProvinceRegisterDto("Tashkent")));
-        return mockMvc.perform(requestBuilder);
+        mockMvc.perform(requestBuilder);
     }
     private ResultActions addCityDistrict() throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                post("/api/v1/addCity")
+                post(BASE_URL+"/addCity")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(new CityRegisterDto("Tashkent sh",8)));
         return mockMvc.perform(requestBuilder);
@@ -110,32 +102,25 @@ class AminControllerUpToCityTest extends BaseTestConfiguration {
 
     private ResultActions getList() throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                get("/api/v1/getCityList");
+                get(BASE_URL+"/getCityList");
         return mockMvc.perform(requestBuilder);
     }
 
     private ResultActions callDelete(int id) throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                delete("/api/v1/deleteCity/" + id);
+                delete(BASE_URL+"/deleteCity/" + id);
         return mockMvc.perform(requestBuilder);
     }
     private ResultActions getById(int id) throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                get("/api/v1/getCity/" + id);
+                get(BASE_URL+"/getCity/" + id);
         return mockMvc.perform(requestBuilder);
     }
     private ResultActions update(int id) throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                put("/api/v1/updateCity/"+id)
+                put(BASE_URL+"/updateCity/"+id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(new CityRegisterDto("Qarshi sh",8)));
         return mockMvc.perform(requestBuilder);
     }
-//    private ResultActions updateThrow(int id) throws Exception {
-//        final MockHttpServletRequestBuilder requestBuilder =
-//                put("/api/v1/updateProvince/"+id)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(new ObjectMapper().writeValueAsString(new ProvinceRegisterDto("Tashkent")));
-//        return mockMvc.perform(requestBuilder);
-//    }
 }
