@@ -12,17 +12,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class JwtGenerate {
-    //    static String jwtAccessSecretKey = "SecretKeyForAccessToken";
-//    static String jwtRefreshSecretKey = "SecretKeyForRefreshToken";
+        static String jwtAccessSecretKey = "SecretKeyForAccessToken";
+    static String jwtRefreshSecretKey = "SecretKeyForRefreshToken";
     static long expirationAccessTime = 3 * 60 * 1000;
     static long expirationRefreshTime = 1_000 * 60 * 60 * 24;
-    static SecretKey jwtAccessSecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    static SecretKey jwtRefreshSecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+//    static SecretKey jwtAccessSecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+//    static SecretKey jwtRefreshSecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public static synchronized String generateAccessToken(
             User user
     ) {
-//        System.out.println("access"+jwtAccessSecretKey.toString()+"\n"+"refresh"+jwtRefreshSecretKey.toString());
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS256, jwtAccessSecretKey)
                 .setSubject(user.getPhoneNumber())

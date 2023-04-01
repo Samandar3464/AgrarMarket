@@ -2,6 +2,7 @@ package uz.pdp.agrarmarket.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -58,14 +59,69 @@ public class CommonExceptionHandler {
                 .build();
     }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.BAD_GATEWAY)
-    public FieldErrorResponse handleAccessTokenTimeExceededException(Exception e) {
+    @ExceptionHandler(UserAlreadyExist.class)
+    @ResponseStatus(HttpStatus.ALREADY_REPORTED)
+    public FieldErrorResponse handleUserAlreadyExistException(UserAlreadyExist e) {
         return FieldErrorResponse.builder()
                 .message(e.getMessage())
-                .code(" Token time out")
+                .code("User already exist")
                 .build();
     }
+
+    @ExceptionHandler(TimeExceededException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public FieldErrorResponse handleTimeExceededExceptionException(TimeExceededException e) {
+        return FieldErrorResponse.builder()
+                .message(e.getMessage())
+                .code("ReFresh token valid time end")
+                .build();
+    }
+
+    @ExceptionHandler(RefreshTokeNotFound.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public FieldErrorResponse handleRefreshTokeNotFoundException(RefreshTokeNotFound e) {
+        return FieldErrorResponse.builder()
+                .message(e.getMessage())
+                .code("ReFresh token not found")
+                .build();
+    }
+
+    @ExceptionHandler(UserNotVerified.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public FieldErrorResponse handleUserNotVerifiedException(UserNotVerified e) {
+        return FieldErrorResponse.builder()
+                .message(e.getMessage())
+                .code("User account not verified")
+                .build();
+    }
+
+    @ExceptionHandler(VerificationCodeLiveTimeEnd.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public FieldErrorResponse handleVerificationCodeLiveTimeEndException(VerificationCodeLiveTimeEnd e) {
+        return FieldErrorResponse.builder()
+                .message(e.getMessage())
+                .code("Verification code live time end")
+                .build();
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public FieldErrorResponse handleMethodArgumentNotValidExceptionException(MethodArgumentNotValidException e) {
+        return FieldErrorResponse.builder()
+                .message(e.getMessage())
+                .code("Validation error")
+                .build();
+    }
+
+
+    //        @ExceptionHandler(Exception.class)
+//    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+//    public FieldErrorResponse handleAccessTokenTimeExceededException(Exception e) {
+//        return FieldErrorResponse.builder()
+//                .message(e.getMessage())
+//                .code(" Token time out")
+//                .build();
+//    }
     @ExceptionHandler(SmsSendingFailException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public FieldErrorResponse handleAccessTokenTimeExceededException(SmsSendingFailException e) {

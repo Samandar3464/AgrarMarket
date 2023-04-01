@@ -1,5 +1,6 @@
 package uz.pdp.agrarmarket.AdminController;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,7 +16,7 @@ public class AdminControllerUpToUser {
 
     @PostMapping("/addUser")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    public ResponseEntity<?> getAddUser(@RequestBody AddUserFromAdminDto addUserFromAdminDto) {
+    public ResponseEntity<?> getAddUser(@Valid @RequestBody AddUserFromAdminDto addUserFromAdminDto) {
         return userService.addUserFromAdmin(addUserFromAdminDto);
     }
 

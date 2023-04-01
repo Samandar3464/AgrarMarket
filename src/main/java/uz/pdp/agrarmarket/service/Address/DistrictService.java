@@ -24,12 +24,11 @@ public class DistrictService implements BaseService<DistrictRegisterDto> {
 
     @Override
     public ResponseEntity<?> add(DistrictRegisterDto districtRegisterDto) {
-        Optional<City> byName = districtRepository.findByNameAndProvinceId(districtRegisterDto.getName(), districtRegisterDto.getProvinceId());
+        Optional<District> byName = districtRepository.findByNameAndProvinceId(districtRegisterDto.getName(), districtRegisterDto.getProvinceId());
         if (byName.isPresent()) {
             throw new RecordAlreadyExistException("This district already have into this province");
         }
-        Province province = provinceRepository.findById(districtRegisterDto.getProvinceId()).orElseThrow(() -> new RecordNotFoundException("Province not found"))
-                ;
+        Province province = provinceRepository.findById(districtRegisterDto.getProvinceId()).orElseThrow(() -> new RecordNotFoundException("Province not found"));
         District district = new District();
         district.setName(districtRegisterDto.getName());
         district.setProvince(province);

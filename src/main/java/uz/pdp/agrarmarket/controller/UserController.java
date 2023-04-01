@@ -28,12 +28,12 @@ public class UserController {
         return userService.setUserPassword(personRegisterDto);
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequestDto personLoginRequestDto) {
         return userService.login(personLoginRequestDto);
     }
 
-    @GetMapping("/forgetPassword")
+    @PostMapping("/forgetPassword")
     public ResponseEntity<?> forgetPassword(@RequestBody UserForgetPasswordDto userForgetPasswordDto) {
         return userService.generateCodeForForgetPassword(userForgetPasswordDto);
     }
@@ -43,7 +43,7 @@ public class UserController {
         return userService.verifyCodeCheckerForRestorePassword(verification);
     }
 
-    @GetMapping("/change/password")
+    @PostMapping("/change/password")
     public ResponseEntity<?> changePassword(@Validated @RequestBody UserRegisterDto personRegisterDto) {
         return userService.changePassword(personRegisterDto);
     }

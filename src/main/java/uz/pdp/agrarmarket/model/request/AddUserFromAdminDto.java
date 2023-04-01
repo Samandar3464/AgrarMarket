@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 public class AddUserFromAdminDto {
     @NotBlank(message = "mobileNumber is required")
-    @Size(min = 9, max = 10)
+    @Size(min = 9, max = 9)
     private String phoneNumber;
 
     @Pattern(regexp = "^[A-Za-z]*$")

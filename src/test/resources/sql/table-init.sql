@@ -1,0 +1,7 @@
+-- CREATE SCHEMA IF NOT EXISTS agrar_project;
+--
+-- create table if not exists agrar_project.province
+-- (
+--     id serial primary key,
+--     name varchar
+-- );

@@ -38,7 +38,7 @@ public class User implements UserDetails {
     private String name;
     @Pattern(regexp = "^[A-Za-z]*$")
     private String surname;
-    @Size(min = 6, max = 10)
+    @Size(min = 6)
     private String password;
     @NotBlank
     @Size(min = 9)
@@ -70,7 +70,7 @@ public class User implements UserDetails {
     private int verificationCode;
 
     private LocalDateTime verificationCodeLiveTime;
-    private LocalDateTime joinedDate;
+    private String joinedDate;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -122,7 +122,8 @@ public class User implements UserDetails {
                 .name(addUserFromAdminDto.getName())
                 .surname(addUserFromAdminDto.getSurname())
                 .roleList(addUserFromAdminDto.getRoleList())
-                .joinedDate(LocalDateTime.now())
+                .joinedDate(LocalDateTime.now().toString())
+                .enableUser(true)
                 .build();
     }
 

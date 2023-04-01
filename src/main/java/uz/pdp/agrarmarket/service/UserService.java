@@ -86,7 +86,7 @@ public class UserService {
         User user = User.builder()
                 .phoneNumber(userRegisterDto.getPhoneNumber())
                 .roleList(List.of(Role.USER))
-                .joinedDate(LocalDateTime.now())
+                .joinedDate(LocalDateTime.now().toString())
                 .verificationCode(verificationCode)
                 .verificationCodeLiveTime(LocalDateTime.now())
                 .build();
