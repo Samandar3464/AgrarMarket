@@ -33,7 +33,7 @@ public class Province {
 
     @JsonIgnore
     @OneToMany(mappedBy = "province")
-    private List<User> peopleList;
+    private List<User> userList;
 
     @JsonIgnore
     @OneToMany(mappedBy = "province")

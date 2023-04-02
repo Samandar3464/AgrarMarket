@@ -13,6 +13,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uz.pdp.agrarmarket.dashboard.ActiveUsers;
+import uz.pdp.agrarmarket.dashboard.ActiveUsersRepository;
+import uz.pdp.agrarmarket.dashboard.DashboardService;
 import uz.pdp.agrarmarket.entity.ENUM.Role;
 import uz.pdp.agrarmarket.entity.User;
 import uz.pdp.agrarmarket.exception.*;
@@ -27,6 +30,7 @@ import uz.pdp.agrarmarket.repository.Address.ProvinceRepository;
 import uz.pdp.agrarmarket.repository.UserRepository;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -43,11 +47,11 @@ public class UserService {
     private final CityRepository cityRepository;
     private final DistrictRepository districtRepository;
     private final SmsSendingService smsSendingService;
-
+    private final DashboardService dashboardService;
 
     public ResponseEntity<?> addUserFromAdmin(AddUserFromAdminDto addUserFromAdminDto) {
         Optional<User> byPhoneNumber = userRepository.findByPhoneNumber(addUserFromAdminDto.getPhoneNumber());
-        if (byPhoneNumber.isPresent()){
+        if (byPhoneNumber.isPresent()) {
             throw new UserAlreadyExist("This phone number already exist");
         }
         User user = User.of(addUserFromAdminDto);
@@ -90,7 +94,8 @@ public class UserService {
         User user = User.builder()
                 .phoneNumber(userRegisterDto.getPhoneNumber())
                 .roleList(List.of(Role.USER))
-                .joinedDate(LocalDateTime.now().toString())
+                .password(passwordEncoder.encode(userRegisterDto.getPassword()))
+                .joinedDate(LocalDateTime.now())
                 .verificationCode(verificationCode)
                 .verificationCodeLiveTime(LocalDateTime.now())
                 .build();
@@ -141,6 +146,7 @@ public class UserService {
             Authentication authenticate = authenticationManager.authenticate(authentication);
             String accessToken = "Bearer " + JwtGenerate.generateAccessToken((User) authenticate.getPrincipal());
             String refreshToken = "RefreshToken " + JwtGenerate.generateRefreshToken((User) authenticate.getPrincipal());
+            dashboardService.saveToActiveUsers(userLoginRequestDto.getPhoneNumber());
             return ResponseEntity.ok(new TokenResponse(accessToken, refreshToken));
         } catch (BadCredentialsException e) {
             throw new UserNotFoundException("User not found");
@@ -211,8 +217,10 @@ public class UserService {
     }
 
     public ResponseEntity<?> getAccessToken(HttpServletRequest request) {
-        return ResponseEntity.ok(jwtFilter.checkRefreshTokenValidAndGetAccessToken(request));
+        String accessToken = jwtFilter.checkRefreshTokenValidAndGetAccessToken(request);
+        return ResponseEntity.ok(accessToken);
     }
+
     public ResponseEntity<?> getUserListWithPagination(int page, int size, String sort) {
         PageRequest pageable = PageRequest.of(page, size, Sort.by(sort).descending());
         Page<User> all = userRepository.findAll(pageable);
@@ -239,6 +247,8 @@ public class UserService {
         user.setDistrict(districtRepository.getById(update.getDistrictId()));
         return user;
     }
+
+
 
 
 }

@@ -1,12 +1,16 @@
 package uz.pdp.agrarmarket.entity;
+
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import uz.pdp.agrarmarket.entity.address.City;
 import uz.pdp.agrarmarket.entity.address.District;
 import uz.pdp.agrarmarket.entity.address.Province;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,21 +24,23 @@ public class Post {
     private Long id;
 
     @NotNull
-    private String workTitle;
-
-    @NotNull
-    private String workDescription;
-
-    @NotNull
-    private Double startPrice;
-
-    private Double endPrice;
-
-    private LocalDate createdTime;
-
-    @NotNull
     @ManyToOne
     private PostCategory postCategory;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    private List<AttachmentEntity> photos;
+
+    @NotNull
+    private Double price;
+
+    @OneToOne
+    private Currency currency;
+
+    @NotBlank
+    @Size(min = 9, max = 9)
+    private String phoneNumber;
+
+    private LocalDateTime createdTime;
 
     @ManyToOne
     @NotNull
@@ -49,4 +55,6 @@ public class Post {
     @ManyToOne
     @NotNull
     private User user;
+
+    private boolean active;
 }

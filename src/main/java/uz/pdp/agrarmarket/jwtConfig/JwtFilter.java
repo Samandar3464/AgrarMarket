@@ -1,4 +1,5 @@
 package uz.pdp.agrarmarket.jwtConfig;
+
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,6 +12,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import uz.pdp.agrarmarket.dashboard.ActiveUsers;
+import uz.pdp.agrarmarket.dashboard.ActiveUsersRepository;
+import uz.pdp.agrarmarket.dashboard.DashboardService;
 import uz.pdp.agrarmarket.entity.User;
 import uz.pdp.agrarmarket.exception.RefreshTokeNotFound;
 import uz.pdp.agrarmarket.exception.TimeExceededException;
@@ -26,30 +30,34 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
+
     private final UserRepository userRepository;
+
+    private final DashboardService dashboardService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
         String requestHeader = request.getHeader("Authorization");
-           if (requestHeader == null || !requestHeader.startsWith("Bearer")) {
-               filterChain.doFilter(request, response);
-               return;
-           }
-           String token = requestHeader.replace("Bearer ", "");
-           Claims claims = JwtGenerate.isValidAccessToken(token);
-           if (claims == null) {
-               filterChain.doFilter(request, response);
-               return;
-           }
-           List<LinkedHashMap<String, String>> authorities = JwtGenerate.getAuthorities(claims);
-           Authentication authentication = new UsernamePasswordAuthenticationToken(
-                   claims.getSubject(), null,
-                   getAuthorities(authorities)
-           );
-           SecurityContextHolder.getContext().setAuthentication(authentication);
-           filterChain.doFilter(request, response);
+        if (requestHeader == null || !requestHeader.startsWith("Bearer")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        String token = requestHeader.replace("Bearer ", "");
+        Claims claims = JwtGenerate.isValidAccessToken(token);
+        if (claims == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        List<LinkedHashMap<String, String>> authorities = JwtGenerate.getAuthorities(claims);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                claims.getSubject(), null,
+                getAuthorities(authorities)
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        filterChain.doFilter(request, response);
 
     }
 
@@ -62,6 +70,7 @@ public class JwtFilter extends OncePerRequestFilter {
         });
         return authorityList;
     }
+
     public String checkRefreshTokenValidAndGetAccessToken(HttpServletRequest request) {
         String requestHeader = request.getHeader("Authorization");
         if (requestHeader == null || !requestHeader.startsWith("RefreshToken")) {
@@ -73,6 +82,7 @@ public class JwtFilter extends OncePerRequestFilter {
             throw new TimeExceededException("ReFresh token valid time end");
         }
         User user = userRepository.findByPhoneNumber(claims.getSubject()).orElseThrow(() -> new UserNotFoundException("User not found"));
+        dashboardService.saveToActiveUsers(user.getPhoneNumber());
         return "Bear " + JwtGenerate.generateAccessToken(user);
     }
 }

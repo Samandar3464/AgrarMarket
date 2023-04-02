@@ -18,6 +18,7 @@ import uz.pdp.agrarmarket.entity.address.Province;
 import uz.pdp.agrarmarket.model.request.AddUserFromAdminDto;
 import uz.pdp.agrarmarket.model.request.UserUpdateRequestDto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,7 +43,7 @@ public class User implements UserDetails {
     @Size(min = 6)
     private String password;
     @NotBlank
-    @Size(min = 9)
+    @Size(min = 9, max = 9)
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
@@ -71,7 +72,7 @@ public class User implements UserDetails {
     private int verificationCode;
 
     private LocalDateTime verificationCodeLiveTime;
-    private String joinedDate;
+    private LocalDateTime joinedDate;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -123,7 +124,7 @@ public class User implements UserDetails {
                 .name(addUserFromAdminDto.getName())
                 .surname(addUserFromAdminDto.getSurname())
                 .roleList(addUserFromAdminDto.getRoleList())
-                .joinedDate(LocalDateTime.now().toString())
+                .joinedDate(LocalDateTime.now())
                 .enableUser(true)
                 .build();
     }
