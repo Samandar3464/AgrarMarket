@@ -64,6 +64,7 @@ public class User implements UserDetails {
     @ManyToOne
     private District district;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> postList;
 
@@ -72,6 +73,7 @@ public class User implements UserDetails {
     private int verificationCode;
 
     private LocalDateTime verificationCodeLiveTime;
+
     private LocalDateTime joinedDate;
 
     @Override

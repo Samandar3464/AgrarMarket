@@ -113,8 +113,8 @@ public class CommonExceptionHandler {
                 .build();
     }
 
-
-    //        @ExceptionHandler(Exception.class)
+//Token ni exception ni ushlash uchun
+//            @ExceptionHandler(Exception.class)
 //    @ResponseStatus(HttpStatus.BAD_GATEWAY)
 //    public FieldErrorResponse handleAccessTokenTimeExceededException(Exception e) {
 //        return FieldErrorResponse.builder()

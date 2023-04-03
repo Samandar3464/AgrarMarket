@@ -1,5 +1,6 @@
 package uz.pdp.agrarmarket.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -27,13 +28,13 @@ public class Post {
     @ManyToOne
     private PostCategory postCategory;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @OneToMany( cascade = CascadeType.ALL)
     private List<AttachmentEntity> photos;
 
     @NotNull
     private Double price;
 
-    @OneToOne
+    @ManyToOne
     private Currency currency;
 
     @NotBlank
@@ -52,6 +53,7 @@ public class Post {
     @ManyToOne
     private District district;
 
+    @JsonIgnore
     @ManyToOne
     @NotNull
     private User user;

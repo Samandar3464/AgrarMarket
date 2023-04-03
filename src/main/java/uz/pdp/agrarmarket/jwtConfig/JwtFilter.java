@@ -12,9 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import uz.pdp.agrarmarket.dashboard.ActiveUsers;
-import uz.pdp.agrarmarket.dashboard.ActiveUsersRepository;
-import uz.pdp.agrarmarket.dashboard.DashboardService;
+import uz.pdp.agrarmarket.dashboard.ActiveRequestsRepository;
 import uz.pdp.agrarmarket.entity.User;
 import uz.pdp.agrarmarket.exception.RefreshTokeNotFound;
 import uz.pdp.agrarmarket.exception.TimeExceededException;
@@ -32,8 +30,7 @@ import java.util.Map;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final UserRepository userRepository;
-
-    private final DashboardService dashboardService;
+    private final ActiveRequestsRepository activeRequestsRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -82,7 +79,6 @@ public class JwtFilter extends OncePerRequestFilter {
             throw new TimeExceededException("ReFresh token valid time end");
         }
         User user = userRepository.findByPhoneNumber(claims.getSubject()).orElseThrow(() -> new UserNotFoundException("User not found"));
-        dashboardService.saveToActiveUsers(user.getPhoneNumber());
         return "Bear " + JwtGenerate.generateAccessToken(user);
     }
 }

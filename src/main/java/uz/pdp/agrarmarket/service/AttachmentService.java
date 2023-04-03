@@ -1,8 +1,8 @@
 package uz.pdp.agrarmarket.service;
 
 import lombok.RequiredArgsConstructor;
-import ws.schild.jave.EncoderException;
 import org.springframework.beans.factory.annotation.Value;
+import ws.schild.jave.EncoderException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.*;
@@ -16,7 +16,6 @@ import uz.pdp.agrarmarket.exception.attach.SomethingWentWrong;
 import uz.pdp.agrarmarket.model.attach.AttachmentDownloadDTO;
 import uz.pdp.agrarmarket.model.attach.AttachmentResponseDTO;
 import uz.pdp.agrarmarket.repository.AttachmentRepository;
-import ws.schild.jave.InputFormatException;
 import ws.schild.jave.MultimediaObject;
 import ws.schild.jave.info.MultimediaInfo;
 
@@ -27,15 +26,16 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class AttachmentForMediaService {
+public class AttachmentService {
 
     private final AttachmentRepository repository;
 
-//    @Value("${attach.upload.folder}")
+    @Value("${attach.upload.folder}")
     public String attachUploadFolder;
 
 //    @Value("${attach.download.url}")
@@ -43,9 +43,9 @@ public class AttachmentForMediaService {
 
 
     public String getYearMonthDay() {
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-        int month = Calendar.getInstance().get(Calendar.MONTH);
-        int day = Calendar.getInstance().get(Calendar.DATE);
+        int year = LocalDate.now().getYear();
+        int month = LocalDate.now().getMonthValue();
+        int day = LocalDate.now().getDayOfMonth();
         return year + "/" + month + "/" + day; // 2022/03/23
     }
 
@@ -61,7 +61,6 @@ public class AttachmentForMediaService {
 
     public AttachmentEntity saveToSystem(MultipartFile file) {
         try {
-            System.out.println(file.getContentType());
             String pathFolder = getYearMonthDay(); // 2022/04/23
             File folder = new File(attachUploadFolder + pathFolder); // attaches/2022/04/23
             if (!folder.exists()) folder.mkdirs();

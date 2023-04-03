@@ -50,6 +50,7 @@ public class UserController {
     }
 
     @PutMapping("/updateUser")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> updateUser(@RequestBody UserUpdateRequestDto personUpdateRequestDto) {
         return userService.updateUser(personUpdateRequestDto);
     }

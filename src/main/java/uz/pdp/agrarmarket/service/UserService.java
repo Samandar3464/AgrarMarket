@@ -13,9 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import uz.pdp.agrarmarket.dashboard.ActiveUsers;
-import uz.pdp.agrarmarket.dashboard.ActiveUsersRepository;
-import uz.pdp.agrarmarket.dashboard.DashboardService;
 import uz.pdp.agrarmarket.entity.ENUM.Role;
 import uz.pdp.agrarmarket.entity.User;
 import uz.pdp.agrarmarket.exception.*;
@@ -30,7 +27,6 @@ import uz.pdp.agrarmarket.repository.Address.ProvinceRepository;
 import uz.pdp.agrarmarket.repository.UserRepository;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +43,6 @@ public class UserService {
     private final CityRepository cityRepository;
     private final DistrictRepository districtRepository;
     private final SmsSendingService smsSendingService;
-    private final DashboardService dashboardService;
 
     public ResponseEntity<?> addUserFromAdmin(AddUserFromAdminDto addUserFromAdminDto) {
         Optional<User> byPhoneNumber = userRepository.findByPhoneNumber(addUserFromAdminDto.getPhoneNumber());
@@ -146,7 +141,6 @@ public class UserService {
             Authentication authenticate = authenticationManager.authenticate(authentication);
             String accessToken = "Bearer " + JwtGenerate.generateAccessToken((User) authenticate.getPrincipal());
             String refreshToken = "RefreshToken " + JwtGenerate.generateRefreshToken((User) authenticate.getPrincipal());
-            dashboardService.saveToActiveUsers(userLoginRequestDto.getPhoneNumber());
             return ResponseEntity.ok(new TokenResponse(accessToken, refreshToken));
         } catch (BadCredentialsException e) {
             throw new UserNotFoundException("User not found");

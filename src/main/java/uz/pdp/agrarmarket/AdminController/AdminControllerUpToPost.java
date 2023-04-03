@@ -11,13 +11,13 @@ import uz.pdp.agrarmarket.service.PostService;
 @RequestMapping("api/v1/admin/post")
 public class AdminControllerUpToPost {
     private final PostService postService;
-//    @GetMapping("/getWorkList")
-//    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
-//    public ResponseEntity<?> getWorkList(@RequestParam(defaultValue = "0") int page,
-//                                      @RequestParam(defaultValue = "5") int size,
-//                                      @RequestParam(defaultValue = "name") String sort) {
-//        return postService.getList(page, size, sort);
-//    }
+    @GetMapping("/getList")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+    public ResponseEntity<?> getWorkList(@RequestParam(defaultValue = "0") int page,
+                                      @RequestParam(defaultValue = "5") int size,
+                                      @RequestParam(defaultValue = "name") String sort) {
+        return postService.getList(page, size, sort);
+    }
 
     @DeleteMapping("/deleteById/{id}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")

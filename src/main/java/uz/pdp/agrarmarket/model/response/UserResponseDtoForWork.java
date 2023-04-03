@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersonResponseDtoForWork {
+public class UserResponseDtoForWork {
     private Integer id;
     private String name;
     private String phoneNumber;

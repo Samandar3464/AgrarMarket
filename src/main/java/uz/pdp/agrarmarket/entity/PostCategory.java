@@ -21,7 +21,8 @@ public class PostCategory {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "postCategory" ,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "postCategory"  , fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Post> post;
+
     private boolean active;
 }

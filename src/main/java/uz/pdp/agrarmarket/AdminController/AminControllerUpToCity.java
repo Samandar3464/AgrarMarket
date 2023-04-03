@@ -10,7 +10,7 @@ import uz.pdp.agrarmarket.service.Address.CityService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/admin/city")
 public class AminControllerUpToCity {
     private final CityService cityService;
 

@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import uz.pdp.agrarmarket.model.request.PostRegisterDto;
 import uz.pdp.agrarmarket.service.PostService;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,13 +17,13 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/addPost")
-    public ResponseEntity<?> addPost(@Validated @RequestBody PostRegisterDto workRegisterDto) {
-        return postService.add(workRegisterDto);
+    public ResponseEntity<?> addPost(@Validated @ModelAttribute PostRegisterDto postRegisterDto , @RequestParam("files")  List<MultipartFile> files) {
+        return postService.add(postRegisterDto , files);
     }
 
     @GetMapping("/getPostById/{id}")
     public ResponseEntity<?> getPostById(@PathVariable Long id) {
-        return postService.getById(id);
+        return postService.getByIdAndUserId(id);
     }
 
     @DeleteMapping("/deleteById/{id}")
@@ -32,7 +35,7 @@ public class PostController {
 //    public ResponseEntity<?> updatePost(@PathVariable Long id,@Validated @RequestBody PostRegisterDto workRegisterDto) {
 //        return postService.update(workRegisterDto, id);
 //    }
-    @GetMapping("/workList")
+    @GetMapping("/list")
     public ResponseEntity<?> getPostList(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,

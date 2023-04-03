@@ -1,14 +1,14 @@
 package uz.pdp.agrarmarket.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,4 +23,8 @@ public class Currency {
     private String name;
 
     private boolean active=true;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "currency")
+    private List<Post> post;
 }

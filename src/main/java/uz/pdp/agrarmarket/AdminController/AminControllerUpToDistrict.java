@@ -10,7 +10,7 @@ import uz.pdp.agrarmarket.service.Address.DistrictService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/admin/district")
 public class AminControllerUpToDistrict {
     private final DistrictService districtService;
 

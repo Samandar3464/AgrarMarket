@@ -24,19 +24,28 @@ public class SecurityConfig {
     private final AuthService authService;
     private final String[] USER_CAN_ENTER_GET =
             new String[]{
-                    "/**"
+                    "/api/v1/user/**",
+                    "/api/v1/post/**",
+                    "/api/v1/admin/**",
+                    "/static/image/**"
             };
     private final String[] USER_CAN_ENTER_POST =
             new String[]{
-                    "/**"
+                    "/api/v1/user/**",
+                    "/api/v1/post/**",
+                    "/api/v1/admin/**",
             };
     private final String[] USER_CAN_ENTER_PUT =
             new String[]{
-                    "/**"
+                    "/api/v1/user/**",
+                    "/api/v1/post/**",
+                    "/api/v1/admin/**",
     };
     private final String[] USER_CAN_ENTER_DELETE =
             new String[]{
-                    "/**"
+                    "/api/v1/user/**",
+                    "/api/v1/post/**",
+                    "/api/v1/admin/**",
             };
 
     @Bean

@@ -12,7 +12,7 @@ import uz.pdp.agrarmarket.service.Address.ProvinceService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/admin/province")
 @Api(description = " province controller")
 public class AdminControllerUpToProvince {
     private final ProvinceService provinceService;
