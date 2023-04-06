@@ -114,14 +114,14 @@ public class CommonExceptionHandler {
     }
 
 //Token ni exception ni ushlash uchun
-//            @ExceptionHandler(Exception.class)
-//    @ResponseStatus(HttpStatus.BAD_GATEWAY)
-//    public FieldErrorResponse handleAccessTokenTimeExceededException(Exception e) {
-//        return FieldErrorResponse.builder()
-//                .message(e.getMessage())
-//                .code(" Token time out")
-//                .build();
-//    }
+            @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+    public FieldErrorResponse handleAccessTokenTimeExceededException(Exception e) {
+        return FieldErrorResponse.builder()
+                .message(e.getMessage())
+                .code(" Token time out")
+                .build();
+    }
     @ExceptionHandler(SmsSendingFailException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public FieldErrorResponse handleAccessTokenTimeExceededException(SmsSendingFailException e) {

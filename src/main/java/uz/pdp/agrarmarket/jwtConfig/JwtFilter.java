@@ -7,37 +7,34 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import uz.pdp.agrarmarket.dashboard.ActiveRequestsRepository;
 import uz.pdp.agrarmarket.entity.User;
 import uz.pdp.agrarmarket.exception.RefreshTokeNotFound;
 import uz.pdp.agrarmarket.exception.TimeExceededException;
 import uz.pdp.agrarmarket.exception.UserNotFoundException;
 import uz.pdp.agrarmarket.repository.UserRepository;
+import uz.pdp.agrarmarket.service.AuthService;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
     private final UserRepository userRepository;
-    private final ActiveRequestsRepository activeRequestsRepository;
-
+    private final AuthService authService;
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-        String requestHeader = request.getHeader("Authorization");
+        String requestHeader = request.getHeader(AUTHORIZATION);
         if (requestHeader == null || !requestHeader.startsWith("Bearer")) {
             filterChain.doFilter(request, response);
             return;
@@ -48,26 +45,14 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        List<LinkedHashMap<String, String>> authorities = JwtGenerate.getAuthorities(claims);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                claims.getSubject(), null,
-                getAuthorities(authorities)
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetails userDetails = authService.loadUserByUsername(claims.getSubject());
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(
+                        userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(authToken);
         filterChain.doFilter(request, response);
-
     }
-
-    private List<SimpleGrantedAuthority> getAuthorities(List<LinkedHashMap<String, String>> authorities) {
-        List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
-        authorities.forEach((map) -> {
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                authorityList.add(new SimpleGrantedAuthority(entry.getValue()));
-            }
-        });
-        return authorityList;
-    }
-
     public String checkRefreshTokenValidAndGetAccessToken(HttpServletRequest request) {
         String requestHeader = request.getHeader("Authorization");
         if (requestHeader == null || !requestHeader.startsWith("RefreshToken")) {

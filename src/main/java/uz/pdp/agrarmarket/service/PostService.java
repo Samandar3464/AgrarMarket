@@ -41,7 +41,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final AttachmentService attachmentService;
 
-    public ResponseEntity<?>    add(PostRegisterDto postRegisterDto , List<MultipartFile> fileList) {
+    public ResponseEntity<?>add(PostRegisterDto postRegisterDto , List<MultipartFile> fileList) {
         Post save = postRepository.save(postBuilder(postRegisterDto , fileList));
         return ResponseEntity.ok(PostResponseDto.of(save, attachmentService));
     }
@@ -55,7 +55,7 @@ public class PostService {
 
     public ResponseEntity<?> getUserPostsList(int page, int size, String sort) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!authentication.isAuthenticated()) {
+        if (!authentication.isAuthenticated()|| authentication.getPrincipal().equals("anonymousUser")) {
             throw new UserNotFoundException("User not found");
         }
         String phoneNumber = (String) authentication.getPrincipal();
@@ -111,7 +111,8 @@ public class PostService {
         if (!authentication.isAuthenticated()) {
             throw new UserNonAuthenticate("User not Authenticated");
         }
-        String phone = (String) authentication.getPrincipal();
+        User userFromToken = (User) authentication.getPrincipal();
+        String phone = userFromToken.getPhoneNumber();
         User user = userRepository.findByPhoneNumber(phone).orElseThrow(() -> new UserNotFoundException("User not found"));
         List<AttachmentEntity> photos = new ArrayList<>();
         for (int i = 0; i < fileList.size(); i++) {

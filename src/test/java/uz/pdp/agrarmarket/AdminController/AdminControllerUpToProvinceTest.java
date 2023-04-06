@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 class AdminControllerUpToProvinceTest extends BaseTestConfiguration {
 
-    private static final String BASE_URL="/api/v1";
+    private static final String BASE_URL="/api/v1/admin/province";
     @AfterEach
     void tearDown() {
         provinceRepository.deleteAll();

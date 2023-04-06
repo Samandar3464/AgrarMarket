@@ -19,21 +19,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 class AminControllerUpToDistrictTest extends BaseTestConfiguration {
 
-    private static final String BASE_URL="/api/v1";
+    private static final String BASE_URL="/api/v1/admin/district";
     @AfterEach
     void tearDown() {
         districtRepository.deleteAll();
     }
     @Test
     @WithMockUser(roles = "SUPER_ADMIN")
-    @DisplayName("Can add District  ")
     void addDistrict() throws Exception {
         addDistrictForCheck().andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(roles = "SUPER_ADMIN")
-    @DisplayName("Check add District throw exception if District exist ")
     void addDistrictThrow() throws Exception {
         addDistrictForCheck();
         addDistrictForCheck().andExpect(status().isAlreadyReported());
@@ -81,14 +79,13 @@ class AminControllerUpToDistrictTest extends BaseTestConfiguration {
     }
     @Test
     @WithMockUser(roles = "SUPER_ADMIN")
-    @DisplayName("Update Throw exception if city not fount")
     void updateDistrictThrow() throws Exception {
         update(100).andExpect(status().isNotFound());
     }
 
     private void addProvince() throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                post(BASE_URL+"/addProvince")
+                post("/api/v1/admin/province/addProvince")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(new ProvinceRegisterDto("Tashkent")));
         mockMvc.perform(requestBuilder);

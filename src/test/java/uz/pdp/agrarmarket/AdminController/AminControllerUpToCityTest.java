@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 class AminControllerUpToCityTest extends BaseTestConfiguration {
 
-    private static final String BASE_URL="/api/v1";
+    private static final String BASE_URL="/api/v1/admin/city";
     @AfterEach
     void tearDown() {
         cityRepository.deleteAll();
@@ -87,7 +87,7 @@ class AminControllerUpToCityTest extends BaseTestConfiguration {
     }
     private void addProvince() throws Exception {
         final MockHttpServletRequestBuilder requestBuilder =
-                post(BASE_URL+"/addProvince")
+                post("/api/v1/admin/province/addProvince")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(new ProvinceRegisterDto("Tashkent")));
         mockMvc.perform(requestBuilder);

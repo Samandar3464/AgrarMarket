@@ -3,10 +3,8 @@ package uz.pdp.agrarmarket.jwtConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import uz.pdp.agrarmarket.entity.User;
 
-import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,8 +14,6 @@ public class JwtGenerate {
     static String jwtRefreshSecretKey = "SecretKeyForRefreshToken";
     static long expirationAccessTime = 10 * 60 * 1000;
     static long expirationRefreshTime = 1_000 * 60 * 60 * 24;
-//    static SecretKey jwtAccessSecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-//    static SecretKey jwtRefreshSecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public static synchronized String generateAccessToken(
             User user
@@ -48,9 +44,9 @@ public class JwtGenerate {
         return getRefreshClaim(token);
     }
 
-    public static List<LinkedHashMap<String, String>> getAuthorities(Claims claims) {
-        return (List<LinkedHashMap<String, String>>) claims.get("authorities");
-    }
+//    public static List<LinkedHashMap<String, String>> getAuthorities(Claims claims) {
+//        return (List<LinkedHashMap<String, String>>) claims.get("authorities");
+//    }
 
 
     private static synchronized Claims getAccessClaim(String token)  {

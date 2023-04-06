@@ -2,6 +2,7 @@ package uz.pdp.agrarmarket.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,16 +18,19 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/addPost")
+    @PreAuthorize("hasAnyRole('USER' , 'SUPER_ADMIN')")
     public ResponseEntity<?> addPost(@Validated @ModelAttribute PostRegisterDto postRegisterDto , @RequestParam("files")  List<MultipartFile> files) {
         return postService.add(postRegisterDto , files);
     }
 
     @GetMapping("/getPostById/{id}")
+    @PreAuthorize("hasAnyRole('USER' , 'SUPER_ADMIN')")
     public ResponseEntity<?> getPostById(@PathVariable Long id) {
         return postService.getByIdAndUserId(id);
     }
 
     @DeleteMapping("/deleteById/{id}")
+    @PreAuthorize("hasAnyRole('USER' , 'SUPER_ADMIN')")
     public ResponseEntity<?> deletePersonPostById(@PathVariable Long id) {
         return postService.deletePersonPost(id);
     }
@@ -36,6 +40,7 @@ public class PostController {
 //        return postService.update(workRegisterDto, id);
 //    }
     @GetMapping("/list")
+    @PreAuthorize("hasAnyRole('USER' , 'SUPER_ADMIN')")
     public ResponseEntity<?> getPostList(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,

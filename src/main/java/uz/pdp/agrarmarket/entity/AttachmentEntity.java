@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -23,10 +24,11 @@ public class AttachmentEntity {
     private String originName;
     private Long size;
     private String type;
-    private String ContentType;
+    private String contentType;
     private String path;
     private Double duration;
-    private LocalDateTime createdDate = LocalDateTime.now();
+    @CreationTimestamp
+    private LocalDateTime createdDate;
     @ManyToOne
     @JsonIgnore
     private Post post;

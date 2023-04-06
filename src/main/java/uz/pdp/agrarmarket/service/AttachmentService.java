@@ -38,8 +38,8 @@ public class AttachmentService {
     @Value("${attach.upload.folder}")
     public String attachUploadFolder;
 
-//    @Value("${attach.download.url}")
-    public String attachDownloadUrl="/static/image/";
+    @Value("${attach.download.url}")
+    public String attachDownloadUrl;
 
 
     public String getYearMonthDay() {
