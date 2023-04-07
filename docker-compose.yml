@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  app:
+    image: 'agrar_market'
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+    container_name: app-2
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/agrar_project
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=axborot1116
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  db:
+    image: 'postgres:latest'
+    container_name: db-2
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=axborot1116
+      - POSTGRES_DB=agrar_project
